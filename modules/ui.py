@@ -114,6 +114,7 @@ def save_files(js_data, images, index):
     p = MyObject(data)
     path = opts.outdir_save
     save_to_dirs = opts.use_save_to_dirs_for_ui
+    grid_save_to_dirs: bool = opts.grid_save_to_dirs_for_ui
     extension: str = opts.samples_format
     start_index = 0
 
@@ -135,9 +136,10 @@ def save_files(js_data, images, index):
             image = Image.open(io.BytesIO(base64.decodebytes(filedata.encode('utf-8'))))
 
             is_grid = image_index < p.index_of_first_image
+            is_save_to_dirs = grid_save_to_dirs if is_grid else save_to_dirs
             i = 0 if is_grid else (image_index - p.index_of_first_image)
 
-            fullfn = save_image(image, path, "", seed=p.all_seeds[i], prompt=p.all_prompts[i], extension=extension, info=p.infotexts[image_index], grid=is_grid, p=p, save_to_dirs=save_to_dirs)
+            fullfn = save_image(image, path, "", seed=p.all_seeds[i], prompt=p.all_prompts[i], extension=extension, info=p.infotexts[image_index], grid=is_grid, p=p, save_to_dirs=is_save_to_dirs)
 
             filename = os.path.relpath(fullfn, path)
             filenames.append(filename)
